@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Madeleine</title>
+<meta name="description" content="Hi, I'm Madeleine.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000;
+    --fg: #fff;
+    --dim: rgba(255, 255, 255, 0.38);
+    --word-stagger: 32ms;
+    --word-duration: 900ms;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    overflow: hidden;
+  }
+
+  body {
+    font-family: "Inter", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  main {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 12vh 24px;
+  }
+
+  .slide {
+    grid-area: 1 / 1;
+    width: 100%;
+    max-width: 30em;
+    font-size: clamp(18px, 2.15vw, 30px);
+    line-height: 1.55;
+    letter-spacing: -0.011em;
+    text-wrap: pretty;
+    transition: opacity 500ms ease, filter 500ms ease;
+  }
+
+  .slide.title {
+    font-size: clamp(32px, 5vw, 68px);
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    text-align: center;
+  }
+
+  .slide.leaving {
+    opacity: 0;
+    filter: blur(6px);
+  }
+
+  .slide p + p { margin-top: 1em; }
+
+  .w {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(0.35em);
+    filter: blur(8px);
+    transition:
+      opacity var(--word-duration) cubic-bezier(.2, .7, .2, 1),
+      transform var(--word-duration) cubic-bezier(.2, .7, .2, 1),
+      filter var(--word-duration) cubic-bezier(.2, .7, .2, 1);
+    transition-delay: calc(var(--i) * var(--word-stagger));
+  }
+
+  .slide.in .w {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  /* Chrome — counter and hint */
+  .meta {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 28px calc(24px + env(safe-area-inset-bottom));
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: var(--dim);
+    pointer-events: none;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hint {
+    opacity: 0;
+    transition: opacity 800ms ease;
+    text-transform: lowercase;
+  }
+  .hint.show { opacity: 1; }
+
+  .bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 1px;
+    background: var(--fg);
+    opacity: 0.5;
+    width: 0;
+    transition: width 700ms cubic-bezier(.2, .7, .2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .w, .slide { transition: none !important; filter: none !important; transform: none !important; }
+  }
+
+  noscript p {
+    max-width: 34em;
+    margin: 1em auto;
+    padding: 0 24px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<div class="bar" aria-hidden="true"></div>
+<main id="stage" aria-live="polite"></main>
+<div class="meta" aria-hidden="true">
+  <span class="count"></span>
+  <span class="hint"></span>
+</div>
+
+<!--
+  Edit the copy here. Each <section> is one screen.
+  Use <p> for paragraphs within a screen.
+-->
+<template id="copy">
+  <section class="title">
+    <p>Hi, I’m Madeleine.</p>
+  </section>
+
+  <section>
+    <p>I was born in California to Canadian diplomats who moved every few years. I started kindergarten in the USSR and came back to graduate from the same school in 1990s Moscow. That school no longer exists, but my instinct to be a keen observer of the world very much does.</p>
+  </section>
+
+  <section>
+    <p>I studied semiotics in college, which is hyper-relevant in today’s AI-social-media landscape. But I’d probably say my real education came when I was 20 and was diagnosed with cancer. I lost my hair and a year to treatment, but gained grace. Of course, I lost that too (way too quickly). What stayed with me is a healthy appreciation for what actually matters. And a desire to do meaningful work.</p>
+  </section>
+
+  <section>
+    <p>In one of my first job interviews, the creative directors hated my portfolio and asked if I had any other writing to share. All I had was my poetry. This got me hired, and taught me that all kinds of words matter.</p>
+  </section>
+
+  <section>
+    <p>In ad agencies, I learned how to think about and write brands. I also learned that ideas are ephemeral — for every 5,000 you have, 10 might make it into the meeting, 1 might make it into the world, and ultimately get 0.0006 percent of someone’s attention. Regardless, I enjoyed telling stories about everything from razors to insurance to clothing to e-commerce to vegetables.</p>
+  </section>
+
+  <section>
+    <p>At Etsy, I learned to immerse inside of a brand, and build on it. That marketing is most often NOT the nucleus of a company, and that creativity in service of the product is actually more exciting and valuable than it being the product. I also learned how to unify brand voice across every touchpoint, sharpen its point of view, and design simple copy guidelines that people can actually use.</p>
+  </section>
+
+  <section>
+    <p>At Endeavor, I learned how to work with different disciplines across a giant octopus of a media conglomerate. At Google, I learned how to do that globally on giant phone launches. Turns out ‘cross-functional collaboration’ is just a jargon-y way of saying really listening to people helps identify opportunities and makes it easier (and more fun) to work with teams.</p>
+  </section>
+
+  <section>
+    <p>Most recently, I finished an executive MBA at the Berlin Creative School of Leadership. It taught me there is always more to learn — about cultures, about life, and about ways of thinking. My interest in brands, connecting people, and meaningful work led me to write a thesis on the business of loneliness — and how brands can better foster connection.</p>
+  </section>
+
+  <section>
+    <p>In my spare time, I love reading, writing about connection, seeing live music, and the world.</p>
+    <p>I also do drawings that I sell for charity.</p>
+  </section>
+
+  <section>
+    <p>The kind of roles that excite me are a culmination of all my learning. They require keen observation. Are meaningful. Need a little bit of poetry, a lot of listening, and a deep understanding of writing, marketing, and cross-functional work. And there is purpose in them.</p>
+  </section>
+</template>
+
+<noscript>
+  <p>Hi, I’m Madeleine. This page needs JavaScript to animate — please enable it.</p>
+</noscript>
+
+<script>
+(() => {
+  const stage = document.getElementById('stage');
+  const count = document.querySelector('.count');
+  const hint  = document.querySelector('.hint');
+  const bar   = document.querySelector('.bar');
+  const sections = [...document.getElementById('copy').content.querySelectorAll('section')];
+  const total = sections.length;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const touch = matchMedia('(hover: none)').matches;
+
+  let index = -1;
+  let current = null;
+  let busy = false;
+  let hintTimer = null;
+
+  const pad = n => String(n).padStart(2, '0');
+
+  // Wrap every word in a span so it can animate on individually.
+  function build(section) {
+    const el = document.createElement('div');
+    el.className = 'slide ' + section.className;
+    let i = 0;
+    section.querySelectorAll('p').forEach(src => {
+      const p = document.createElement('p');
+      src.textContent.trim().split(/\s+/).forEach((word, k, arr) => {
+        const span = document.createElement('span');
+        span.className = 'w';
+        span.style.setProperty('--i', i++);
+        span.textContent = word;
+        p.appendChild(span);
+        if (k < arr.length - 1) p.appendChild(document.createTextNode(' '));
+      });
+      el.appendChild(p);
+    });
+    el.dataset.words = i;
+    return el;
+  }
+
+  function show(next) {
+    if (busy || next < 0 || next >= total || next === index) return;
+    busy = true;
+    clearTimeout(hintTimer);
+    hint.classList.remove('show');
+
+    const old = current;
+    const delay = old && !reduced ? 450 : 0;
+    if (old) old.classList.add('leaving');
+
+    setTimeout(() => {
+      if (old) old.remove();
+      index = next;
+      current = build(sections[index]);
+      stage.appendChild(current);
+      count.textContent = pad(index + 1) + ' / ' + pad(total);
+      bar.style.width = ((index + 1) / total * 100) + '%';
+      history.replaceState(null, '', '#' + (index + 1));
+
+      // Force layout so the transition runs, then reveal.
+      current.getBoundingClientRect();
+      requestAnimationFrame(() => current.classList.add('in'));
+
+      const words = +current.dataset.words;
+      const revealMs = reduced ? 0 : words * 32 + 900;
+      busy = false;
+
+      hintTimer = setTimeout(() => {
+        hint.textContent = index === total - 1
+          ? (touch ? 'tap to start over' : 'click to start over')
+          : (touch ? 'tap to continue' : 'click or press → to continue');
+        hint.classList.add('show');
+      }, revealMs + 600);
+    }, delay);
+  }
+
+  const next = () => show(index === total - 1 ? 0 : index + 1);
+  const prev = () => show(index - 1);
+
+  document.addEventListener('click', next);
+
+  document.addEventListener('keydown', e => {
+    if (['ArrowRight', 'ArrowDown', ' ', 'Enter', 'PageDown'].includes(e.key)) { e.preventDefault(); next(); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') show(0);
+    else if (e.key === 'End') show(total - 1);
+  });
+
+  // Scroll wheel / trackpad: one gesture = one step.
+  let wheelLock = false;
+  addEventListener('wheel', e => {
+    if (wheelLock || Math.abs(e.deltaY) < 20) return;
+    wheelLock = true;
+    e.deltaY > 0 ? (index < total - 1 && next()) : prev();
+    setTimeout(() => (wheelLock = false), 1100);
+  }, { passive: true });
+
+  // Swipe on touch screens (taps fall through to click).
+  let startY = null, startX = null;
+  addEventListener('touchstart', e => { startY = e.touches[0].clientY; startX = e.touches[0].clientX; }, { passive: true });
+  addEventListener('touchend', e => {
+    if (startY === null) return;
+    const dy = startY - e.changedTouches[0].clientY;
+    const dx = startX - e.changedTouches[0].clientX;
+    const d = Math.abs(dy) > Math.abs(dx) ? dy : dx;
+    if (Math.abs(d) > 50) d > 0 ? (index < total - 1 && next()) : prev();
+    startY = null;
+  }, { passive: true });
+
+  const fromHash = () => {
+    const n = parseInt(location.hash.slice(1), 10);
+    return n >= 1 && n <= total ? n - 1 : 0;
+  };
+  addEventListener('hashchange', () => show(fromHash()));
+  show(fromHash());
+})();
+</script>
+</body>
+</html>
