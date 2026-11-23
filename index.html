@@ -71,6 +71,16 @@
 
   .slide p + p { margin-top: 1em; }
 
+  .slide a { color: inherit; text-decoration: none; }
+  /* Underline goes on the word spans; it doesn't inherit into inline-blocks. */
+  .slide a .w {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: rgba(255, 255, 255, 0.4);
+  }
+  .slide a:hover .w { text-decoration-color: #fff; }
+
   .w {
     display: inline-block;
     opacity: 0;
@@ -220,16 +230,34 @@
     const el = document.createElement('div');
     el.className = 'slide ' + section.className;
     let i = 0;
+    // Copies the paragraph's structure (so links, <em>, <strong> survive)
+    // while wrapping each word in its own animated span.
+    const wrap = (from, into) => {
+      from.childNodes.forEach(node => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          node.textContent.split(/(\s+)/).forEach(part => {
+            if (!part) return;
+            if (/^\s+$/.test(part)) { into.appendChild(document.createTextNode(' ')); return; }
+            const span = document.createElement('span');
+            span.className = 'w';
+            span.style.setProperty('--i', i++);
+            span.textContent = part;
+            into.appendChild(span);
+          });
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          const copy = node.cloneNode(false);
+          if (copy.tagName === 'A' && !copy.getAttribute('href').startsWith('mailto:')) {
+            copy.target = '_blank';
+            copy.rel = 'noopener';
+          }
+          wrap(node, copy);
+          into.appendChild(copy);
+        }
+      });
+    };
     section.querySelectorAll('p').forEach(src => {
       const p = document.createElement('p');
-      src.textContent.trim().split(/\s+/).forEach((word, k, arr) => {
-        const span = document.createElement('span');
-        span.className = 'w';
-        span.style.setProperty('--i', i++);
-        span.textContent = word;
-        p.appendChild(span);
-        if (k < arr.length - 1) p.appendChild(document.createTextNode(' '));
-      });
+      wrap(src, p);
       el.appendChild(p);
     });
     el.dataset.words = i;
@@ -275,7 +303,8 @@
   const next = () => show(index === total - 1 ? 0 : index + 1);
   const prev = () => show(index - 1);
 
-  document.addEventListener('click', next);
+  // Clicking a link opens it instead of advancing.
+  document.addEventListener('click', e => { if (!e.target.closest('a')) next(); });
 
   document.addEventListener('keydown', e => {
     if (['ArrowRight', 'ArrowDown', ' ', 'Enter', 'PageDown'].includes(e.key)) { e.preventDefault(); next(); }
